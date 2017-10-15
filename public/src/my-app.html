@@ -19,7 +19,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/paper-styles/color.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 
@@ -69,20 +68,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
+
     <app-route
         route="{{route}}"
-        pattern="[[rootPattern]]:page"
+        pattern="[[rootPath]]:page"
         data="{{routeData}}"
-        tail="{{subroute}}"></app-route>		
-    <app-drawer-layout fullbleed>
+        tail="{{subroute}}">
+    </app-route>
+
+    <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer">
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="view1">Check-In</a>
-          <a name="view2" href="view2">My points</a>
-          <a name="view3" href="view3">View Three</a>
+          <a name="view1" href="[[rootPath]]view1">View One</a>
+          <a name="view2" href="[[rootPath]]view2">View Two</a>
+          <a name="view3" href="[[rootPath]]view3">View Three</a>
         </iron-selector>
       </app-drawer>
 
@@ -92,7 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
-            <div main-title>QR club</div>
+            <div main-title>My App</div>
           </app-toolbar>
         </app-header>
 
@@ -112,7 +117,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     class MyApp extends Polymer.Element {
-
       static get is() { return 'my-app'; }
 
       static get properties() {
@@ -122,9 +126,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          rootPattern: String,
           routeData: Object,
           subroute: String,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
         };
       }
 
@@ -134,23 +140,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
-      constructor() {
-        super();
-
-        // Get root pattern for app-route, for more info about `rootPath` see:
-        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
-        this.rootPattern = (new URL(this.rootPath)).pathname;
-      }
-
       _routePageChanged(page) {
-        // Polymer 2.0 will call with `undefined` on initialization.
-        // Ignore until we are properly called with a string.
-        if (page === undefined) {
-          return;
-        }
-
         // If no page was found in the route data, page will be an empty string.
-        // Deault to 'view1' in that case.
+        // Default to 'view1' in that case.
         this.page = page || 'view1';
 
         // Close a non-persistent drawer when the page & route are changed.

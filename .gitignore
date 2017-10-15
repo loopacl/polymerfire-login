@@ -1,4 +1,6 @@
 public/bower_components/
 public/build/
 public/node_modules/
-nbproject/
+functions/node_modules/
+/firebase-debug.log
+**/.DS_Store

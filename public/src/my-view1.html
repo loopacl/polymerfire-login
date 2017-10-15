@@ -10,48 +10,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="../bower_components/paper-styles/color.html">
-<link ref="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-app.html">
-<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
-<script src="../bower_components/qrious/dist/qrious.min.js"></script>
 
 <dom-module id="my-view1">
-	
   <template>
     <style include="shared-styles">
       :host {
         display: block;
+
         padding: 10px;
       }
     </style>
+
     <div class="card">
-			<h1>{{greeting}}</h1>
-			<p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+      <div class="circle">1</div>
+      <h1>View One</h1>
+      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
+      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
     </div>
-			
   </template>
 
   <script>
-		// Define the element's API using an ES2015 class
     class MyView1 extends Polymer.Element {
       static get is() { return 'my-view1'; }
-			
-			// Declare properties for the element's public API
-			static get properties() {
-				return {
-					// https://youtu.be/SkhCs-IDgS4?t=11m51s
-					user: Object,
-					greeting: {
-						type: String,
-						value: "Check-In "
-					}
-				};
-			}				
-			
     }
 
-		// Register the x-custom element with the browser
     window.customElements.define(MyView1.is, MyView1);
   </script>
 </dom-module>
