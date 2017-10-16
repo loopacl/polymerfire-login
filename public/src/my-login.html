@@ -1,0 +1,92 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<dom-module id="my-login">
+  <template>
+    <style include="shared-styles">
+			:host {
+        position: absolute;
+        top: 46px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1;
+
+        @apply(--layout);
+        @apply(--layout-center-center);
+      }
+
+      :host([signed-in]) {
+        opacity: 0;
+        pointer-events: none;
+				height:100%;
+      }
+			
+			h1{
+				clear: both;
+				margin-bottom: .25em;
+				text-align: center;
+			}
+			
+			form.login {
+        --paper-input-container-color: black;
+        --paper-input-container-focus-color: black;
+        --paper-input-container-invalid-color: red;
+        --paper-input-container-input-color: black;
+			}
+			/*paper-button > * {
+				vertical-align: middle;
+				text-transform: none;
+			}*/
+		</style>
+		
+		<div hidden$="[[user]]" class="card">
+			<form on-submit="signInWithEmailAndPassword" class="login">
+				<h1>My App</h1>
+				<paper-input label="Email" type="email" value="{{email}}"></paper-input>
+				<paper-input label="Password" type="password" value="{{password}}"></paper-input>
+				<div><paper-button type="submit" on-tap="signIn" disabled="[[disabled]]">
+					<iron-icon icon="account-circle"></iron-icon>
+					<span>Login</span>
+				</paper-button></div>
+			</form>
+		</div>
+    
+  </template>
+  <script>
+		class MyLogin extends Polymer.Element {
+			
+			static get is() {
+				return 'my-login';
+			}
+			
+			static get properties() {
+				return {
+					disabled: {
+						type: Boolean,
+						reflectToAttribute: true,
+						value: false
+					},
+					signedIn: {
+						type: Boolean,
+						reflectToAttribute: true,
+						value: false
+					}
+				}
+			}
+		
+			signIn() {
+				//fire
+				//https://www.polymer-project.org/2.0/docs/upgrade#common-utility-apis
+				this.dispatchEvent(new CustomEvent('sign-in', { bubbles: false }));
+      }
+			
+		}
+		window.customElements.define(MyLogin.is, MyLogin);
+  </script>
+</dom-module>

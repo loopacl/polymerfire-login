@@ -20,8 +20,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/polymerfire/firebase-app.html" />
 <link rel="import" href="my-icons.html">
 
+<link rel="lazy-import" href="my-login.html">
 <link rel="lazy-import" href="my-view1.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
@@ -67,6 +70,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: bold;
       }
     </style>
+		
+		<!-- Configure Firebase -->
+		<firebase-app
+			name="ustlogin"
+			api-key=""
+			auth-domain="ust-login.firebaseapp.com"
+			database-url="https://ust-login.firebaseio.com"
+			storage-bucket="ust-login.appspot.com"
+			messaging-sender-id=""
+			project-id="ust-login">
+		</firebase-app>
+		<firebase-auth
+				id="auth"
+				app-name="ustlogin"
+				provider="google"
+				signed-in="{{signedIn}}"
+				user="{{user}}">
+		</firebase-auth>
 
     <app-location
         route="{{route}}"
@@ -84,10 +105,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
         <app-toolbar>Menu</app-toolbar>
+					 <!--<div class="avatar-container">
+						<div class="image"></div>
+					</div>-->
+					<div class="contact-info">
+						<div class="name">{{user.displayName}}</div>
+						<div class="email">{{user.email}}</div>
+					</div>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="view1" href="[[rootPath]]view1">View One</a>
           <a name="view2" href="[[rootPath]]view2">View Two</a>
           <a name="view3" href="[[rootPath]]view3">View Three</a>
+          <a name="login" href="[[rootPath]]login">Login</a>
+          <a name="logout" on-tap="signOut" hidden$="{{signedIn}}">Logout</a>
         </iron-selector>
       </app-drawer>
 
@@ -109,6 +139,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <my-view1 name="view1"></my-view1>
           <my-view2 name="view2"></my-view2>
           <my-view3 name="view3"></my-view3>
+          <my-login name="login"
+										id="login"
+										on-sign-in="signIn"
+										signed-in="[[signedIn]]"
+										disabled="[[!online]]"></my-login>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
@@ -143,7 +178,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
-        this.page = page || 'view1';
+				
+				if (this.$.auth) {
+          this.page = page || 'view1';
+        } else{
+					this.page = page || 'login';
+				}
+				
+        
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -163,6 +205,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'view404';
+      }
+			
+			signIn() {
+				/*this.$.auth.signInWithEmailAndPassword('oscar@loopa.cl','test123');*/
+				this.$.auth
+								.signInWithEmailAndPassword(
+								this.$.login.email,
+								this.$.login.password)
+								.catch(function(error){});
+			}
+			
+      signOut() {
+        if (this.$.auth) {
+          this.$.auth.signOut();
+        }
       }
     }
 
