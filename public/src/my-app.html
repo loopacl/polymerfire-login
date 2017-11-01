@@ -69,6 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: black;
         font-weight: bold;
       }
+			*[hidden] { display: none; }
     </style>
 		
 		<!-- Configure Firebase -->
@@ -109,15 +110,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 						<div class="image"></div>
 					</div>-->
 					<div class="contact-info">
-						<div class="name">Logged in: [[signedIn]]</div>
+						<!--<div class="name">Logged in: [[signedIn]]</div>-->
 						<div class="email">{{user.email}}</div>
 					</div>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="view1" href="[[rootPath]]view1">View One</a>
-          <a name="view2" href="[[rootPath]]view2">View Two</a>
-          <a name="view3" href="[[rootPath]]view3">View Three</a>
-          <a name="login" href="[[rootPath]]login" hidden$="[[signedIn]]">Login</a>
-          <a name="login" href="[[rootPath]]login" on-tap="_signOut" hidden$="[[!signedIn]]">Logout</a>
+          <div hidden$="[[!signedIn]]" name="view1"><a href="[[rootPath]]view1">View One</a></div>
+          <div hidden$="[[!signedIn]]" name="view2"><a href="[[rootPath]]view2">View Two</a></div>
+          <div hidden$="[[!signedIn]]" name="view3"><a href="[[rootPath]]view3">View Three</a></div>
+          <div hidden$="[[signedIn]]" name="login"><a href="[[rootPath]]login">Login</a></div>
+          <div hidden$="[[!signedIn]]" name="login"><a href="[[rootPath]]login" on-tap="_signOut">Logout</a></div>
         </iron-selector>
       </app-drawer>
 
@@ -189,7 +190,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // If no page was found in the route data, page will be an empty string.
         // Default to 'view1' in that case.
 				
-				if (this.$.auth) {
+				if (this.signedIn) {
           this.page = page || 'view1';
         } else{
 					this.page = page || 'login';
@@ -216,12 +217,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 			
 			signIn() {
-				/*this.$.auth.signInWithEmailAndPassword('oscar@loopa.cl','test123');*/
-				this.$.auth
+				//DEBUG
+				//this.$.auth.signInWithEmailAndPassword('<user>','<password>');
+				/*this.$.auth
 								.signInWithEmailAndPassword(
 								this.$.login.email,
 								this.$.login.password)
-								.catch(function(error){});
+								.catch(function(error){});*/
+				this.page = 'view1';
 			}
 			
       _signOut() {

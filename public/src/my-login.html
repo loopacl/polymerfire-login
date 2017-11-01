@@ -50,7 +50,7 @@
 				<h1>My App</h1>
 				<paper-input label="Email" type="email" value="{{email}}"></paper-input>
 				<paper-input label="Password" type="password" value="{{password}}"></paper-input>
-				<div><paper-button type="submit" on-tap="signIn" disabled="[[disabled]]">
+				<div><paper-button type="submit" on-tap="_signIn" disabled="[[disabled]]">
 					<iron-icon icon="account-circle"></iron-icon>
 					<span>Login</span>
 				</paper-button></div>
@@ -80,8 +80,8 @@
 				}
 			}
 		
-			signIn() {
-				//fire
+			_signIn() {
+				//Polymer 1.0 fire function in 2.0 is the ES6 native #usetheplatform
 				//https://www.polymer-project.org/2.0/docs/upgrade#common-utility-apis
 				this.dispatchEvent(new CustomEvent('sign-in', { bubbles: false }));
       }
